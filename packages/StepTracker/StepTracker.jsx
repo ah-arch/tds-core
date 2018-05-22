@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Text from '@tds/core-text'
-import Box from '@tds/core-box'
+import Flexbox from '../../shared/components/Flexbox/Flexbox'
 
 import Step from './Step/Step'
 
@@ -14,32 +14,34 @@ import styles from './StepTracker.modules.scss'
  * @version ./package.json
  */
 
-const StepTracker = ({ current, steps, stepText }) => {
+const StepTracker = ({ current, steps, mobileStepLabelTemplate }) => {
+  const parseStepText = () => {
+    return mobileStepLabelTemplate
+      .replace('%{current}', current < steps.length ? current + 1 : steps.length)
+      .replace('%{total}', steps.length)
+  }
+
+  const getStepLabel = () => {
+    return current < steps.length ? steps[current] : steps[steps.length - 1]
+  }
   return (
     <div>
-      <Box vertical={2} dangerouslyAddClassName={styles.container}>
+      <Flexbox direction="row">
         {steps.map((label, index) => {
           return (
-            /* eslint-disable react/no-array-index-key */
             <Step
               status={current}
-              label={steps[index]}
+              label={label}
               stepNumber={index + 1}
               stepIndex={index}
-              key={index}
-              data-testid="innerStep"
+              key={`step-${label}`}
+              data-testid={`step-${index}`}
             />
-            /* eslint-enable react/no-array-index-key */
           )
         })}
-      </Box>
+      </Flexbox>
       <div className={styles.mobileLabel}>
-        <Text>
-          {stepText
-            .replace('%current', current < steps.length ? current + 1 : steps.length)
-            .replace('%total', steps.length)}{' '}
-          {current < steps.length ? steps[current] : steps[steps.length - 1]}
-        </Text>
+        <Text>{`${parseStepText()} ${getStepLabel()}`}</Text>
       </div>
     </div>
   )
@@ -49,8 +51,6 @@ StepTracker.propTypes = {
   /**
    * The active step. The minimum value is 0, while the maximum value is the length of the steps prop.
    */
-
-  // eslint-disable-next-line consistent-return
   current: PropTypes.number.isRequired,
   /**
    * The steps as an array of strings.
@@ -60,11 +60,11 @@ StepTracker.propTypes = {
    * String for text to display current step progress on mobile devices.
    * Use %current to place the current step and use %total to place the total amount of steps.
    */
-  stepText: PropTypes.string,
+  mobileStepLabelTemplate: PropTypes.string,
 }
 
 StepTracker.defaultProps = {
-  stepText: 'Step %current of %total:',
+  mobileStepLabelTemplate: 'Step %{current} of %{total}:',
 }
 
 export default StepTracker

@@ -3,21 +3,21 @@
 exports[`<StepTracker /> renders 1`] = `
 <div>
   <div
-    class="TDS_Box-modules__verticalPadding-2___1Uh2T container"
+    class="row"
   >
     <div
       aria-current="false"
       aria-label="Login"
       class="stepActive"
     >
-      <span
-        class="icon"
+      <div
+        class="TDS_Box-modules__verticalPadding-3___Fsv37 icon"
       >
         <i
           aria-hidden="true"
           class="TDS_Icon-modules__iconCheckmark___3cAol TDS_Icon-modules__icon___13xYd TDS_Icon-modules__inverted___2mdlT TDS_Icon-modules__size16___1pm12"
         />
-      </span>
+      </div>
       <span
         class="label"
       >
@@ -33,11 +33,11 @@ exports[`<StepTracker /> renders 1`] = `
       aria-label="Purchase"
       class="stepActive"
     >
-      <span
-        class="icon"
+      <div
+        class="TDS_Box-modules__verticalPadding-3___Fsv37 icon"
       >
         <br />
-      </span>
+      </div>
       <span
         class="label"
       >
@@ -53,11 +53,11 @@ exports[`<StepTracker /> renders 1`] = `
       aria-label="Checkout"
       class="step"
     >
-      <span
-        class="icon"
+      <div
+        class="TDS_Box-modules__verticalPadding-3___Fsv37 icon"
       >
         <br />
-      </span>
+      </div>
       <span
         class="label"
       >

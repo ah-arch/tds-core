@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import Icon from '@tds/core-decorative-icon'
 import Text from '@tds/core-text'
+import Box from '@tds/core-box'
 
 import styles from '../StepTracker.modules.scss'
 
@@ -17,9 +18,9 @@ const Step = ({ label, status, stepNumber, stepIndex }) => {
       aria-label={label}
       aria-current={status === stepIndex ? 'true' : 'false'}
     >
-      <span className={styles.icon}>
+      <Box vertical={3} dangerouslyAddClassName={styles.icon}>
         {status > stepIndex ? <Icon symbol="checkmark" size={16} variant="inverted" /> : <br />}
-      </span>
+      </Box>
       <span className={styles.label}>
         <Text bold={status === stepIndex}>
           {stepNumber}. {label}
