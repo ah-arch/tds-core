@@ -13,12 +13,8 @@ describe('<StepTracker />', () => {
 
   const doMount = (overrides = {}) => {
     const container = mount(<StepTracker {...defaultProps} {...overrides} />)
-    const innerSteps = container.find('[data-testid="innerStep"]')
 
-    return {
-      container,
-      innerSteps,
-    }
+    return container.find('[data-testid="stepTrackerContainer"]')
   }
 
   const doRender = (overrides = {}) => render(<StepTracker {...defaultProps} {...overrides} />)
@@ -32,21 +28,48 @@ describe('<StepTracker />', () => {
   it('contains defined steps', () => {
     const stepTracker = doMount()
 
-    expect(stepTracker.innerSteps.length).toBe(3)
+    expect(stepTracker.find('[data-testid="step-2"]').length).toEqual(1)
   })
 
   it('renders a single step in progress', () => {
-    const { container, innerSteps } = doMount({ current: 2 })
-    expect(container.find('div.stepActive').length).toBe(3)
+    const stepTracker = doMount({ current: 2 })
 
-    expect(innerSteps.at(0)).toContainReact(
+    expect(stepTracker.find('[data-testid="step-0"]')).toContainReact(
       <Icon symbol="checkmark" size={16} variant="inverted" />
     )
-    expect(innerSteps.at(1)).toContainReact(
+    expect(stepTracker.find('[data-testid="step-0"]').hasClass('stepActive'))
+
+    expect(stepTracker.find('[data-testid="step-1"]')).toContainReact(
       <Icon symbol="checkmark" size={16} variant="inverted" />
     )
-    expect(innerSteps.at(2)).not.toContainReact(
+    expect(stepTracker.find('[data-testid="step-1"]').hasClass('stepActive'))
+
+    expect(stepTracker.find('[data-testid="step-2"]')).not.toContainReact(
       <Icon symbol="checkmark" size={16} variant="inverted" />
     )
+    expect(stepTracker.find('[data-testid="step-2"]').hasClass('stepActive'))
+  })
+
+  it('applies the right value to aria-current', () => {
+    const stepTracker = doMount()
+
+    expect(stepTracker.find('[data-testid="singleStepContainer-1"]')).toHaveProp(
+      'aria-current',
+      'true'
+    )
+  })
+
+  it('passes additional attributes to button element', () => {
+    const stepTracker = doMount({ id: 'step-tracker', tabIndex: 1 })
+
+    expect(stepTracker).toHaveProp('id', 'step-tracker')
+    expect(stepTracker).toHaveProp('tabIndex', 1)
+  })
+
+  it('does not allow custom CSS', () => {
+    const stepTracker = doMount({ className: 'my-custom-class', style: { color: 'hotpink' } })
+
+    expect(stepTracker).not.toHaveProp('className', 'my-custom-class')
+    expect(stepTracker).not.toHaveProp('style')
   })
 })

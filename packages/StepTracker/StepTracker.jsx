@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import Text from '@tds/core-text'
 import Flexbox from '../../shared/components/Flexbox/Flexbox'
 
+import safeRest from '../../shared/utils/safeRest'
+
 import Step from './Step/Step'
 
 import styles from './StepTracker.modules.scss'
@@ -14,18 +16,19 @@ import styles from './StepTracker.modules.scss'
  * @version ./package.json
  */
 
-const StepTracker = ({ current, steps, mobileStepLabelTemplate }) => {
-  const parseStepText = () => {
-    return mobileStepLabelTemplate
-      .replace('%{current}', current < steps.length ? current + 1 : steps.length)
-      .replace('%{total}', steps.length)
-  }
+const parseStepText = ({ current, steps, mobileStepLabelTemplate }) => {
+  return mobileStepLabelTemplate
+    .replace('%{current}', current < steps.length ? current + 1 : steps.length)
+    .replace('%{total}', steps.length)
+}
 
-  const getStepLabel = () => {
-    return current < steps.length ? steps[current] : steps[steps.length - 1]
-  }
+const getStepLabel = ({ current, steps }) => {
+  return current < steps.length ? steps[current] : steps[steps.length - 1]
+}
+
+const StepTracker = ({ current, steps, mobileStepLabelTemplate, ...rest }) => {
   return (
-    <div>
+    <div {...safeRest(rest)} data-testid="stepTrackerContainer">
       <Flexbox direction="row">
         {steps.map((label, index) => {
           return (
@@ -34,14 +37,20 @@ const StepTracker = ({ current, steps, mobileStepLabelTemplate }) => {
               label={label}
               stepNumber={index + 1}
               stepIndex={index}
-              key={`step-${label}`}
+              key={label}
               data-testid={`step-${index}`}
             />
           )
         })}
       </Flexbox>
       <div className={styles.mobileLabel}>
-        <Text>{`${parseStepText()} ${getStepLabel()}`}</Text>
+        <Text>
+          {`${() => {
+            parseStepText(current, steps, mobileStepLabelTemplate)
+          }} ${() => {
+            getStepLabel(current, steps)
+          }}`}
+        </Text>
       </div>
     </div>
   )
